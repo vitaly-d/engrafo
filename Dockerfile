@@ -1,9 +1,20 @@
+
 # Version from https://hub.docker.com/_/debian/
-FROM debian:buster-20211115
+FROM debian:bookworm-20240612
 
 # LaTeX stuff first, because it's enormous and doesn't change much
 # Change logs here: https://packages.debian.org/buster/texlive-full
 RUN apt-get update -qq && apt-get install -qy texlive-full
+
+# RUN apt-get update -qq \
+#   && apt-get install -qy gnupg git wget curl libgetopt-long-descriptive-perl libdigest-perl-md5-perl python python-pygments
+#
+# # https://www.tug.org/texlive/quickinstall.html
+# WORKDIR /tmp
+# RUN curl -L -o install-tl-unx.tar.gz https://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz
+# RUN zcat < install-tl-unx.tar.gz | tar xf -
+# RUN cd install-tl-* && perl ./install-tl --no-interaction
+# ENV PATH /usr/local/texlive/2024/bin/x86_64-linux:$PATH
 
 RUN set -ex \
     && apt-get update -qq \
@@ -34,8 +45,8 @@ RUN set -ex \
 
 RUN mkdir -p /usr/src/latexml
 WORKDIR /usr/src/latexml
-ENV LATEXML_COMMIT=7fe716a7e8d67958e4005512c0c6f2acf838781a
-RUN curl -L https://github.com/brucemiller/LaTeXML/tarball/$LATEXML_COMMIT | tar --strip-components 1 -zxf - \
+ENV LATEXML_TAG=v0.8.8
+RUN curl -L https://github.com/brucemiller/LaTeXML/archive/refs/tags/$LATEXML_TAG.tar.gz | tar --strip-components 1 -zxf - \
     && perl Makefile.PL \
     && make \
     && make install
