@@ -1,4 +1,4 @@
-const childProcess = require("child_process");
+const childProcess = require("child_pr/processocess");
 const fs = require("fs-extra");
 const path = require("path");
 const readline = require("readline");
@@ -20,6 +20,8 @@ function createChildProcess({
   texPath,
   outputDir,
 }) {
+  const tex_extra_packages_path =
+    process.env.TEX_EXTRA_PACKAGES || "/tex_extra_packages/";
   // prettier-ignore
   const latexmlArgs = [
     "--format", "html5",
@@ -29,6 +31,7 @@ function createChildProcess({
     "--verbose",
     "--timestamp", "0",
     "--path", "/app/latexml/packages/",
+    "--path", tex_extra_packages_path, // an additional search path to be mounted, e.g., -v /my/lib:/tex_extra_packages 
     "--preload", "/app/latexml/engrafo.ltxml",
     "--preload", "/usr/src/latexml/lib/LaTeXML/Package/hyperref.sty.ltxml",
     "--xsltparameter", "SIMPLIFY_HTML:true"
