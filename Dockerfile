@@ -1,20 +1,9 @@
-
-# Version from https://hub.docker.com/_/debian/
-FROM debian:bookworm-20240612
+# Version from https://hub.docker.com/_/debian/
+FROM debian:buster-20211115
 
 # LaTeX stuff first, because it's enormous and doesn't change much
 # Change logs here: https://packages.debian.org/buster/texlive-full
 RUN apt-get update -qq && apt-get install -qy texlive-full
-
-# RUN apt-get update -qq \
-#   && apt-get install -qy gnupg git wget curl libgetopt-long-descriptive-perl libdigest-perl-md5-perl python python-pygments
-#
-# # https://www.tug.org/texlive/quickinstall.html
-# WORKDIR /tmp
-# RUN curl -L -o install-tl-unx.tar.gz https://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz
-# RUN zcat < install-tl-unx.tar.gz | tar xf -
-# RUN cd install-tl-* && perl ./install-tl --no-interaction
-# ENV PATH /usr/local/texlive/2024/bin/x86_64-linux:$PATH
 
 RUN set -ex \
     && apt-get update -qq \
@@ -28,7 +17,7 @@ RUN set -ex \
     python3-minimal \
     # latexml dependencies \
     libarchive-zip-perl libfile-which-perl libimage-size-perl  \
-    libio-string-perl libjson-xs-perl libtext-unidecode-perl libpod-parser-perl \
+    libio-string-perl libjson-xs-perl libtext-unidecode-perl \
     libparse-recdescent-perl liburi-perl libuuid-tiny-perl libwww-perl \
     libxml2 libxml-libxml-perl libxslt1.1 libxml-libxslt-perl  \
     imagemagick libimage-magick-perl perl-doc build-essential \
@@ -45,8 +34,8 @@ RUN set -ex \
 
 RUN mkdir -p /usr/src/latexml
 WORKDIR /usr/src/latexml
-ENV LATEXML_TAG=v0.8.8
-RUN curl -L https://github.com/brucemiller/LaTeXML/archive/refs/tags/$LATEXML_TAG.tar.gz | tar --strip-components 1 -zxf - \
+ENV LATEXML_COMMIT=7fe716a7e8d67958e4005512c0c6f2acf838781a
+RUN curl -L https://github.com/brucemiller/LaTeXML/tarball/$LATEXML_COMMIT | tar --strip-components 1 -zxf - \
     && perl Makefile.PL \
     && make \
     && make install
@@ -58,7 +47,7 @@ COPY .docker/policy.xml /etc/ImageMagick-6/policy.xml
 RUN mkdir -p /app
 WORKDIR /app
 
-# Node
+# Node
 COPY package.json yarn.lock /app/
 RUN yarn install --pure-lockfile && yarn cache clean
 
