@@ -28,7 +28,7 @@ RUN set -ex \
     python3-minimal \
     # latexml dependencies \
     libarchive-zip-perl libfile-which-perl libimage-size-perl  \
-    libio-string-perl libjson-xs-perl libtext-unidecode-perl \
+    libio-string-perl libjson-xs-perl libtext-unidecode-perl libpod-parser-perl \
     libparse-recdescent-perl liburi-perl libuuid-tiny-perl libwww-perl \
     libxml2 libxml-libxml-perl libxslt1.1 libxml-libxslt-perl  \
     imagemagick libimage-magick-perl perl-doc build-essential \
